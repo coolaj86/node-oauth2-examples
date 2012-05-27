@@ -45,8 +45,8 @@ The consumer is an application registered with the platform such as TweetDeck.
 
 ### RESTful resources
 
-  * The **authorize** is usually something like `oauth/authorize` or `login/oauth/authorize`
-  * The **access_token** is usually something like `oauth/access_token` or `login/oauth/authorize`
+  * The **authorize** is usually something like `oauth/authorize` such as `https://github.com/login/oauth/authorize`
+  * The **access_token** is usually something like `oauth/access_token` such as `https://github.com/login/oauth/authorize`
 
 ### scope
 
