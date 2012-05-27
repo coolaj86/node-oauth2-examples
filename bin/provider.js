@@ -15,7 +15,7 @@
       var addr = server.address()
         ;
 
-      console.log(" listening on http://%s:%d", addr.address, addr.port);
+      console.log("Provider listening on http://%s:%d", addr.address, addr.port);
     }
 
     server = app.listen(port, onListening);

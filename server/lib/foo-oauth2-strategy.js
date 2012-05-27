@@ -20,9 +20,14 @@
       , authCallback = '/auth/' + moduleName + '_callback'
       , sessionAuthFailed = moduleName + '_login_attempt_failed'
       , sessionRedirectUrl = moduleName + '_redirect_url'
+      , callbackUrlObj
       ;
 
-    options.callback = authCallback;
+    // http://localhost:7788/
+    //options.callback = authCallback;
+    callbackUrlObj = url.parse(options.callback);
+    authCallback = callbackUrlObj.pathname;
+    console.log(authCallback);
 
     // Give the strategy a name
     that.name = moduleName;
@@ -51,28 +56,47 @@
       //, "login/oauth/access_token"
     );
 
-    my._redirectUri = options.callback;
+    //my._redirectUri = options.callback;
     my.scope = options.scope || "";
 
     // Declare the method that actually does the authentication
     that.authenticate = function (request, response, callback) {
-      console.log('looking at that.authenticate', request.originalUrl, request.url);
       //todo: makw the call timeout ....
-      var parsedUrl = url.parse(request.originalUrl, true)
+
+      console.log('looking at that.authenticate', request.originalUrl, request.url);
+
+      var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
+        , host = request.headers.host
+        , parsedUrl = url.parse(request.originalUrl, true)
         , self = this
         , redirectUrl
         ;
 
-      function doThing(error, data, response) {
+      my._redirectUri = protocol + host + authCallback;
+      console.log(my._redirectUri);
+
+      function verifyAuthSuccess(error, data, response) {
+        console.log('verifyAuthSuccess:');
+        if (error) {
+          console.error(error);
+        } else if (data) {
+          console.log(data);
+        } else {
+          console.log('dripping in lamesauce...');
+        }
+
+        /*
         if (error) {
           request.getAuthDetails().sessionAuthFailed = true;
           self.fail(callback);
         } else {
           self.success(JSON.parse(data).user, callback);
         }
+        */
+        self.success("some arbitrary data", callback);
       }
 
-      function doOtherThing(error, access_token, refresh_token) {
+      function storeTokensInSession(error, access_token, refresh_token) {
         if (error) {
           callback(error);
           return;
@@ -87,7 +111,7 @@
         my._oAuth.getProtectedResource(
             "https://github.com/api/v2/json/user/show"
           , request.session.access_token
-          , doThing
+          , verifyAuthSuccess
         );
       }
 
@@ -108,7 +132,7 @@
           , {
                 redirect_uri: my._redirectUri
             }
-          , doOtherThing
+          , storeTokensInSession
         );
         return;
       }
@@ -120,6 +144,7 @@
       }
 
       request.session.sessionRedirectUrl = request.originalUrl;
+
       redirectUrl = my._oAuth.getAuthorizeUrl({
         redirect_uri: my._redirectUri,
         scope: my.scope

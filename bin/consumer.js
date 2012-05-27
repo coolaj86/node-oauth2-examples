@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var port = process.argv[2] || 4455
+  var port = process.argv[2] || 7788
     , app = require('../server').consumer
     ;
 
@@ -15,7 +15,7 @@
       var addr = server.address()
         ;
 
-      console.log(" listening on http://%s:%d", addr.address, addr.port);
+      console.log("Consumer listening on http://%s:%d", addr.address, addr.port);
     }
 
     server = app.listen(port, onListening);
