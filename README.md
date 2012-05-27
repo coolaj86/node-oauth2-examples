@@ -1,7 +1,17 @@
 NodeJS OAuth2 Example
 ===
 
-There are two servers: `provider` and `consumer`
+This is an exploratory demo with both an OAuth2 provider and consumer.
+The demo provider lets you login and can grant access to the consumer.
+
+You should clone it to play.
+
+    git clone git://github.com/coolaj86/node-oauth2-examples.git
+    cd node-oauth2-examples
+    npm install
+
+The Demo Provider (Foo)
+---
 
     node bin/provider
     # runs server/lib/provider.js
@@ -10,12 +20,13 @@ There are two servers: `provider` and `consumer`
     # http://localhost:4455/logout
     # http://localhost:4455/secret
 
+The Demo Consumer
+---
+
     node bin/consumer
     # runs server/lib/consumer.js and foo-oauth2-strategy.js
     # uses connect-auth and node-oauth
     # http://localhost:7788/login
-
-The demo provider lets you login and can grant access to the consumer.
 
 The demo consumer will ask the provider to log you in.
 If you have already logged in to the provider you don't need to login again,
