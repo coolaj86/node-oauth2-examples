@@ -1,0 +1,26 @@
+{
+  "author": "AJ ONeal <coolaj86@gmail.com> (http://coolaj86.info/)",
+  "name": "oauth2-example",
+  "version": "0.1.0",
+  "dependencies": {
+    "connect_router": "~1.8.6",
+    "oauth2-provider": "~1.0.1",
+    "connect": "~2.3.0",
+    "oauth": "~0.9.7",
+    "connect-auth": "~0.5.1"
+  },
+  "devDependencies": {},
+  "bin": {
+    "oauth2-example-servers": "bin/server.js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "prepublish": "node deploy"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}

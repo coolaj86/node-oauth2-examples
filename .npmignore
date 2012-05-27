@@ -1,0 +1,4 @@
+# overrides .gitignore for NPM
+node_modules
+.git
+

@@ -1,0 +1,30 @@
+{
+  "author": "DUMMY AUTHOR <DUMMY@example.com> (http://DUMMY.me)",
+  "name": "DUMMYAPP-webclient",
+  "description": "The browser webclient for DUMMYAPP",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/DUMMYORG/DUMMYAPP.git"
+  },
+  "main": "lib/index",
+  "scripts": {
+    "test": "run-tests"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "browserDependencies": {
+    "ahr2": "2.x",
+    "bonzo": "1.x",
+    "qwery": "3.x",
+    "bean": "0.4.x",
+    "domready": "0.2.x"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
