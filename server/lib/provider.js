@@ -12,6 +12,10 @@
     , app
     ;
 
+  function escape_entities(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   connect.router = require('connect_router');
   OAuth2Provider = require('oauth2-provider').OAuth2Provider;
 
@@ -29,22 +33,30 @@
   myOAP.on('enforce_login', function(req, res, authorize_url, next) {
     if(req.session.user) {
       next(req.session.user);
-    } else {
-      res.writeHead(303, {Location: '/login?next=' + encodeURIComponent(authorize_url)});
-      res.end();
+      return;
     }
+
+    console.log('enforce_login:', authorize_url);
+    res.writeHead(303, {Location: '/login?next=' + encodeURIComponent(authorize_url)});
+    res.end();
   });
 
   // render the authorize form with the submission URL
   // use two submit buttons named "allow" and "deny" for the user's choice
   myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
-    res.end('<html>this app wants to access your account... <form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>');
+    console.log('has scope?', req.url);
+    res.end(
+        '<html>client_id: ' + client_id + ' wants to use WebApps Center to install applications.'
+      + '<form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>'
+      + '<html>'
+    );
   });
 
   // save the generated grant code for the current user
   myOAP.on('save_grant', function(req, client_id, code, next) {
-    if(!(req.session.user in myGrants))
+    if(!(req.session.user in myGrants)) {
       myGrants[req.session.user] = {};
+    }
 
     myGrants[req.session.user][client_id] = code;
     next();
@@ -52,8 +64,9 @@
 
   // remove the grant when the access token has been sent
   myOAP.on('remove_grant', function(user_id, client_id, code) {
-    if(myGrants[user_id] && myGrants[user_id][client_id])
+    if(myGrants[user_id] && myGrants[user_id][client_id]) {
       delete myGrants[user_id][client_id];
+    }
   });
 
   // find the user for a particular grant
@@ -67,8 +80,9 @@
       for(user in myGrants) {
         clients = myGrants[user];
 
-        if(clients[client_id] && clients[client_id] == code)
+        if(clients[client_id] && clients[client_id] == code) {
           return next(null, user);
+        }
       }
     }
 
@@ -104,7 +118,6 @@
     });
 
     rest.get('/login', function(req, res, next) {
-      console.log(req.session);
       if(req.session.user) {
         res.writeHead(303, {Location: '/'});
         return res.end();
@@ -112,11 +125,18 @@
 
       var next_url = req.query.next ? req.query.next : '/';
 
-      res.end('<html><form method="post" action="/login"><input type="hidden" name="next" value="' + next_url + '"><input type="text" placeholder="username" name="username"><input type="password" placeholder="password" name="password"><button type="submit">Login</button></form>');
+      res.end(
+          '<html>'
+        + '<form method="post" action="/login">'
+          + '<input type="hidden" name="next" value="' + next_url + '">'
+          + '<input type="text" placeholder="username" name="username">'
+          + '<input type="password" placeholder="password" name="password"><button type="submit">Login</button>'
+        + '</form>'
+      );
     });
 
     rest.post('/login', function(req, res, next) {
-      console.log('req.body', req.body);
+      console.log('at /login');
       req.session.user = req.body.username;
 
       res.writeHead(303, {Location: req.body.next || '/'});
@@ -124,13 +144,15 @@
     });
 
     rest.get('/logout', function(req, res, next) {
-      req.session.destroy(function(err) {
-        res.writeHead(303, {Location: '/'});
+      console.log('at /logout');
+      req.session.destroy(function (err) {
+        res.writeHead(303, { Location: '/' });
         res.end();
       });
     });
 
     rest.get('/secret', function(req, res, next) {
+      console.log('at /secret');
       if(req.session.user) {
         res.end('proceed to secret lair, extra data: ' + JSON.stringify(req.session.data));
       } else {
@@ -138,6 +160,20 @@
         res.end('no');
       }
     });
+  }
+
+  function sessionDemo(req, res, next) {
+    var sess = req.session;
+    if (sess.views) {
+      res.setHeader('Content-Type', 'text/html');
+      res.write('<p>views: ' + sess.views + '</p>');
+      res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>');
+      res.end();
+      sess.views += 1;
+    } else {
+      sess.views = 1;
+      res.end('welcome to the session demo. refresh!');
+    }
   }
 
   app = connect.createServer()
@@ -152,24 +188,8 @@
     .use(myOAP.oauth())
     .use(myOAP.login())
     .use(connect.router(router))
-    .use(function(req, res, next){
-      var sess = req.session;
-      if (sess.views) {
-        res.setHeader('Content-Type', 'text/html');
-        res.write('<p>views: ' + sess.views + '</p>');
-        res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>');
-        res.end();
-        sess.views++;
-      } else {
-        sess.views = 1;
-        res.end('welcome to the session demo. refresh!');
-      }
-    })
+    .use(sessionDemo)
   ;
-
-  function escape_entities(s) {
-    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
 
   module.exports = app;
 }());

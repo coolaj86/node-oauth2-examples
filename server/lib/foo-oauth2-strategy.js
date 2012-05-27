@@ -149,6 +149,7 @@
         redirect_uri: my._redirectUri,
         scope: my.scope
       });
+      console.log('getAuthorizeUrl', redirectUrl);
 
       self.redirect(response, redirectUrl, callback);
     };
