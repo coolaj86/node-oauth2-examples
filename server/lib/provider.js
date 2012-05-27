@@ -46,7 +46,9 @@
   myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
     console.log('has scope?', req.url);
     res.end(
-        '<html>client_id: ' + client_id + ' wants to use WebApps Center to install applications.'
+        '<html>'
+      + '<body style="background-color: #DDFFDD;">'
+      + 'client_id: ' + client_id + ' wants to use WebApps Center to install applications.'
       + '<form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>'
       + '<html>'
     );
@@ -114,7 +116,11 @@
 
   function router(rest) {
     rest.get('/', function(req, res, next) {
-      res.end('home, logged in? ' + !!req.session.user);
+      res.end(
+          '<html>'
+        + '<body style="background-color: #DDFFDD;">'
+        + 'home, logged in? ' + !!req.session.user
+      );
     });
 
     rest.get('/login', function(req, res, next) {
@@ -127,6 +133,7 @@
 
       res.end(
           '<html>'
+        + '<body style="background-color: #DDFFDD;">'
         + '<form method="post" action="/login">'
           + '<input type="hidden" name="next" value="' + next_url + '">'
           + '<input type="text" placeholder="username" name="username">'
@@ -154,10 +161,18 @@
     rest.get('/secret', function(req, res, next) {
       console.log('at /secret');
       if(req.session.user) {
-        res.end('proceed to secret lair, extra data: ' + JSON.stringify(req.session.data));
+        res.end(
+            '<html>'
+          + '<body style="background-color: #DDFFDD;">'
+          + 'proceed to secret lair, extra data: ' + JSON.stringify(req.session.data)
+        );
       } else {
         res.writeHead(403);
-        res.end('no');
+        res.end(
+            '<html>'
+          + '<body style="background-color: #DDFFDD;">'
+          + 'no'
+        );
       }
     });
   }
@@ -172,7 +187,11 @@
       sess.views += 1;
     } else {
       sess.views = 1;
-      res.end('welcome to the session demo. refresh!');
+      res.end(
+          '<html>'
+        + '<body style="background-color: #DDFFDD;">'
+        + 'welcome to the session demo. refresh!'
+      );
     }
   }
 

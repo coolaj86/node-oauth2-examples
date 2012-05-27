@@ -17,7 +17,7 @@
     var that = {}
       , my = {}
       , moduleName = options.name || 'foo'
-      , authCallback = '/auth/' + moduleName + '_callback'
+      , authCallback = '/_oauth/_' + moduleName + '_callback'
       , sessionAuthFailed = moduleName + '_login_attempt_failed'
       , sessionRedirectUrl = moduleName + '_redirect_url'
       , callbackUrlObj
@@ -25,8 +25,8 @@
 
     // http://localhost:7788/
     //options.callback = authCallback;
-    callbackUrlObj = url.parse(options.callback);
-    authCallback = callbackUrlObj.pathname;
+    //callbackUrlObj = url.parse(options.callback);
+    //authCallback = callbackUrlObj.pathname;
     console.log(authCallback);
 
     // Give the strategy a name
@@ -36,10 +36,13 @@
     that.setupRoutes = function (app) {
       app.use(authCallback, function (req, res) {
         req.authenticate([that.name], function (error, authenticated) {
+          console.log('req.session.sessionRedirectUrl', req.session.sessionRedirectUrl);
           res.writeHead(303, {
             'Location': req.session.sessionRedirectUrl
           });
-          res.end('');
+          res.end(
+              ''
+          );
         });
       });
     };
@@ -126,6 +129,8 @@
         return;
       }
 
+      request.session.sessionRedirectUrl = options.callback;
+
       if (parsedUrl.query && parsedUrl.query.code) {
         my._oAuth.getOAuthAccessToken(
             parsedUrl.query.code
@@ -143,6 +148,7 @@
         return;
       }
 
+      console.log('assigning req.session.sessionRedirectUrl', request.originalUrl);
       request.session.sessionRedirectUrl = request.originalUrl;
 
       redirectUrl = my._oAuth.getAuthorizeUrl({

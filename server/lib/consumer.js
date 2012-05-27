@@ -46,18 +46,34 @@
     res.writeHead(200, {'Content-Type': 'text/html'});
 
     if (req.isAuthenticated()) {
-      res.end('Authenticated: ' + JSON.stringify(req.getAuthDetails().user));
+      res.end(
+          '<html>'
+        + '<body style="background-color: #EEEEFF;">'
+        + 'Authenticated: ' + JSON.stringify(req.getAuthDetails().user)
+        + '<br>'
+        + '<a href="/login">Login with Foo</a>'
+        + '<a href="/logout">Logout from Foo</a>'
+      );
       return;
     }
 
-    res.end('Not Authenticated');
+    res.end(
+        '<html>'
+      + '<body style="background-color: #EEEEFF;">'
+      + 'Not Authenticated'
+    );
   }
 
   function redirectOnLogout(redirectUrl) {
 
     function handler(authContext, loggedOutUser, callback) {
+      console.log('redirectOnLogout url', redirectUrl);
       authContext.response.writeHead(303, { 'Location': redirectUrl });
-      authContext.response.end('looking at redirectOnLogout');
+      authContext.response.end(
+          '<html>'
+        + '<body style="background-color: #EEEEFF;">'
+        + 'looking at redirectOnLogout'
+      );
 
       if (callback) {
         callback();
@@ -77,7 +93,7 @@
       strategies: [
           fooStrategy(fooStrategyOptions)
       ]
-    , trace: true
+    //, trace: true
     , logoutHandler: redirectOnLogout("/")
   };
 
