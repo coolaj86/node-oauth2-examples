@@ -1,11 +1,9 @@
-/*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true*/
 (function () {
   "use strict";
 
   var connect = require('connect')
     , fooStrategy = require('./foo-oauth2-strategy')
     , auth = require('connect-auth')
-    , url = require('url')
     , authOptions
     , fooStrategyOptions
     , app
@@ -33,20 +31,21 @@
       next();
     }
 
-    req.authenticate(['foo'], logAuthentication);
+    req.authenticate(['foo'], { scope: ["email", "birthday"] }, logAuthentication);
   }
 
-  function logoutRoute(req, res, params) {
+  function logoutRoute(req, res) {
     console.log('looking at /logout');
     req.logout(); // Using the 'event' model to do a redirect on logout.
+    res.end();
   }
 
-  function homeRoute(req, res, params) {
+  function homeRoute(req, res) {
     console.log('looking at /', req.url);
     res.writeHead(200, {'Content-Type': 'text/html'});
 
     if (req.isAuthenticated()) {
-      res.end(
+      res.write(
           '<html>'
         + '<body style="background-color: #EEEEFF;">'
         + 'Authenticated: ' + JSON.stringify(req.getAuthDetails().user)
@@ -54,14 +53,20 @@
         + '<a href="/login">Login with Foo</a>'
         + '<a href="/logout">Logout from Foo</a>'
       );
+      res.end();
       return;
     }
 
-    res.end(
+    res.write(
         '<html>'
       + '<body style="background-color: #EEEEFF;">'
-      + 'Not Authenticated'
+      + 'Login using <a href="#login" '
+        + 'onclick="window.open(\'/login\', \'oauthLogin\', '
+        + '\'width=300,height=300,location=no\'); return false;'
+      + '">provider</a>?'
+      + '</body></html>'
     );
+    res.end();
   }
 
   function redirectOnLogout(redirectUrl) {
@@ -97,6 +102,7 @@
     , logoutHandler: redirectOnLogout("/")
   };
 
+  // XXX TODO getProtectedResource /secret
   app = connect()
     .use(connect.favicon())
     .use(connect.cookieParser("keybored dog"))

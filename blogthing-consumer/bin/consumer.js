@@ -4,7 +4,7 @@
   "use strict";
 
   var port = process.argv[2] || 7788
-    , app = require('../server').consumer
+    , app = require('../server')
     ;
 
   function run() {
