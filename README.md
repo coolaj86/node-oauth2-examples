@@ -12,30 +12,31 @@ A provider is a service like facebook, twitter, google+, or github that handles 
 
 You can run the provider on it's own like so:
 
-    node bookface-provider/bin/provider
+    pushd bookface-provider/
+    npm install
+    node bin/provider
     # uses oauth2-provider
     # http://localhost:4455/login
     # http://localhost:4455/logout
     # http://localhost:4455/secret
 
-The consumer is a service such as Spotify, EverNote, BlissControl, IfThisThenThat, or Calepin
+The consumer is a service such as Disqus, Spotify, EverNote, BlissControl, IfThisThenThat, or Calepin
 
 You can run the consumer on it's own like so:
 
-    node blogthing-consumer/bin/consumer
+    pushd blogthing-consumer/
+    npm install
+    node bin/consumer
     # uses foo-oauth2-strategy.js
     # uses connect-auth and node-oauth
     # http://localhost:7788/login
 
-The demo provider lets you login and can grant access to the consumer.
+Process
+---
 
 The demo consumer will ask the provider to log you in.
 If you have already logged in to the provider you don't need to login again,
 instead you will be directly taken to the `allow` / `deny` prompt.
-
-P.S. It's almost 3am. I'll finish these docs sometime later.
-The code is pretty clean, but still has some ugly in it
-(mostly from the examples I copied and haven't refactored well-enough yet)
 
 Terminology
 ---
@@ -46,8 +47,8 @@ The consumer is an application registered with the platform such as TweetDeck.
 
 ### RESTful resources
 
-  * The **authorize** is usually something like `oauth/authorize` or `login/oauth/authorize`
-  * The **access_token** is usually something like `oauth/access_token` or `login/oauth/authorize`
+  * The **authorize** is usually something like `oauth/authorize` such as `https://github.com/login/oauth/authorize`
+  * The **access_token** is usually something like `oauth/access_token` such as `https://github.com/login/oauth/authorize`
 
 ### scope
 
