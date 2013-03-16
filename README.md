@@ -1,17 +1,29 @@
 NodeJS OAuth2 Example
 ===
 
-There are two servers: `provider` and `consumer`
+    git clone git://github.com/coolaj86/node-oauth2-examples.git
+    pushd node-oauth2-examples
 
-    node bin/provider
-    # runs server/lib/provider.js
+There are two servers: `provider` and `consumer`. Both can be run simultaneously by running the demo.
+
+    node bin/demo
+
+A provider is a service like facebook, twitter, google+, or github that handles the details of authentication.
+
+You can run the provider on it's own like so:
+
+    node bookface-provider/bin/provider
     # uses oauth2-provider
     # http://localhost:4455/login
     # http://localhost:4455/logout
     # http://localhost:4455/secret
 
-    node bin/consumer
-    # runs server/lib/consumer.js and foo-oauth2-strategy.js
+The consumer is a service such as Spotify, EverNote, BlissControl, IfThisThenThat, or Calepin
+
+You can run the consumer on it's own like so:
+
+    node blogthing-consumer/bin/consumer
+    # uses foo-oauth2-strategy.js
     # uses connect-auth and node-oauth
     # http://localhost:7788/login
 
@@ -75,3 +87,10 @@ Don't get the two mixed up. :-D
 ### code
 
 This is the query parameter used as the provider responds to the request for an access token.
+
+## debugging
+
+  Dipping into auth\_middleware
+  Dipping into requestMethods
+  Dipping into strategyExecutor
+  Dipping into foostrategy
