@@ -1,10 +1,10 @@
-/*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true*/
 (function () {
   "use strict";
   // simple server with a protected resource at /secret secured by OAuth 2
 
   var OAuth2Provider
     , connect = require('connect')
+    , url = require('url')
     , MemoryStore = connect.session.MemoryStore
     , myClients
     , myGrants
@@ -16,7 +16,9 @@
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  connect.router = require('connect_router');
+  if (!connect.router) {
+    connect.router = require('connect_router');
+  }
   OAuth2Provider = require('oauth2-provider').OAuth2Provider;
 
   // hardcoded list of <client id, client secret> tuples
@@ -44,7 +46,12 @@
   // render the authorize form with the submission URL
   // use two submit buttons named "allow" and "deny" for the user's choice
   myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
+    var urlObj
+      ;
+
     console.log('has scope?', req.url);
+    urlObj = url.parse(req.url, true);
+
     res.end(
         '<html>'
       + '<body style="background-color: #DDFFDD;">'
@@ -115,15 +122,13 @@
   });
 
   function router(rest) {
-    rest.get('/', function(req, res, next) {
-      res.end(
-          '<html>'
-        + '<body style="background-color: #DDFFDD;">'
-        + 'home, logged in? ' + !!req.session.user
-      );
+    rest.get('/status', function(req, res) {
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.write(JSON.stringify({ loggedIn: !!req.session.user }));
+      res.end();
     });
 
-    rest.get('/login', function(req, res, next) {
+    rest.get('/login', function(req, res) {
       if(req.session.user) {
         res.writeHead(303, {Location: '/'});
         return res.end();
@@ -131,18 +136,10 @@
 
       var next_url = req.query.next ? req.query.next : '/';
 
-      res.end(
-          '<html>'
-        + '<body style="background-color: #DDFFDD;">'
-        + '<form method="post" action="/login">'
-          + '<input type="hidden" name="next" value="' + next_url + '">'
-          + '<input type="text" placeholder="username" name="username">'
-          + '<input type="password" placeholder="password" name="password"><button type="submit">Login</button>'
-        + '</form>'
-      );
+      res.end(next_url);
     });
 
-    rest.post('/login', function(req, res, next) {
+    rest.post('/login', function(req, res) {
       console.log('at /login');
       req.session.user = req.body.username;
 
@@ -150,15 +147,18 @@
       res.end();
     });
 
-    rest.get('/logout', function(req, res, next) {
+    rest.get('/logout', function(req, res) {
       console.log('at /logout');
       req.session.destroy(function (err) {
+        if (err) {
+          // nothing yet
+        }
         res.writeHead(303, { Location: '/' });
         res.end();
       });
     });
 
-    rest.get('/secret', function(req, res, next) {
+    rest.get('/secret', function(req, res) {
       console.log('at /secret');
       if(req.session.user) {
         res.end(
@@ -197,7 +197,6 @@
 
   app = connect.createServer()
     //.use(connect.logger())
-    .use(connect.favicon())
     .use(connect.json())
     .use(connect.urlencoded())
     .use(connect.query())
@@ -207,7 +206,7 @@
     .use(myOAP.oauth())
     .use(myOAP.login())
     .use(connect.router(router))
-    .use(sessionDemo)
+    .use('/session-demo', sessionDemo)
   ;
 
   module.exports = app;

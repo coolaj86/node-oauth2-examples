@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-/*jshint node:true laxcomma:true*/
 (function () {
   "use strict";
 
   var port = process.argv[2] || 4455
-    , app = require('../server').provider
+    , app = require('../server')
     ;
 
   function run() {

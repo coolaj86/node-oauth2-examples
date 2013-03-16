@@ -1,0 +1,17 @@
+!!! 5
+html
+  head
+    title Bookface Provider
+    link(rel="stylesheet", href="style.css")
+    script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js")
+    script(src='pakmanaged.js')
+  body
+    h1 Welcome to Bookface Provider!
+    p Bookface is an OAuth provider in the same way that Facebook is an OAuth provider.
+    p Unlike Facebook, however, it doesn't do anything else.
+    div.js-login
+      form(method="post", action="/login")
+        input(type="hidden", name="next", value="#BUG.next_url")
+        input(type="text", placeholder="username", name="username")
+        input(type="password", placeholder="password", name="password")
+        button(type="submit") Login

@@ -1,0 +1,33 @@
+{
+  "name": "bookface-provider",
+  "version": "0.5.0",
+  "description": "An example OAuth2 provider",
+  "main": "lib/api",
+  "bin": {
+    "bookface-provider": "bin/provider.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-jade": "~0.5.0",
+    "grunt-contrib-less": "~0.5.0",
+    "grunt": "~0.4.1",
+    "grunt-pakmanager": "~0.2.2",
+    "grunt-develop": "0.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": "",
+  "keywords": [
+    "auth",
+    "oauth",
+    "oauth2",
+    "connect",
+    "connect-auth",
+    "oauth-provider"
+  ],
+  "author": "AJ ONeal",
+  "license": "Apache2"
+}
