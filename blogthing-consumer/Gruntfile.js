@@ -10,7 +10,7 @@ module.exports = function (grunt) {
       }
     , "develop": {
           "server": {
-              "file": "bin/provider.js"
+              "file": "bin/consumer.js"
           }
       }
     , "jade": {
