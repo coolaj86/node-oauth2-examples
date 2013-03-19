@@ -39,7 +39,9 @@
     }
 
     console.log('enforce_login:', authorize_url);
-    res.writeHead(303, {Location: '/login?next=' + encodeURIComponent(authorize_url)});
+    req.session.nextUrl = authorize_url;
+    res.writeHead(303, { Location: '/#login' });
+    //res.writeHead(303, { Location: '/#login?next=' + encodeURIComponent(authorize_url) });
     res.end();
   });
 
@@ -52,13 +54,13 @@
     console.log('has scope?', req.url);
     urlObj = url.parse(req.url, true);
 
-    res.end(
-        '<html>'
-      + '<body style="background-color: #DDFFDD;">'
-      + 'client_id: ' + client_id + ' wants to use WebApps Center to install applications.'
-      + '<form method="post" action="' + authorize_url + '"><button name="allow">Allow</button><button name="deny">Deny</button></form>'
-      + '<html>'
-    );
+    req.session.nextUrl = authorize_url;
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.write(JSON.stringify({
+        clientId: client_id
+      , authorizeUrl: authorize_url
+    }));
+    res.end();
   });
 
   // save the generated grant code for the current user
@@ -128,9 +130,11 @@
       res.end();
     });
 
+    // this used to write out a form that had
+    // 'allow' and 'deny' as options and 'next' as a parameter
     rest.get('/login', function(req, res) {
       if(req.session.user) {
-        res.writeHead(303, {Location: '/'});
+        res.writeHead(303, { Location: '/' });
         return res.end();
       }
 
@@ -139,11 +143,30 @@
       res.end(next_url);
     });
 
+    // this used to redirects the post to the "next" url
+    // which will then respond
     rest.post('/login', function(req, res) {
-      console.log('at /login');
-      req.session.user = req.body.username;
+      var nextUrl = req.session.nextUrl || req.body.next || ''
+        ;
 
-      res.writeHead(303, {Location: req.body.next || '/'});
+      console.log('at /login');
+      // TODO actually authenticate
+      req.session.user = req.body.username;
+      console.log('nextUrl:', req.session.nextUrl);
+
+      // Form Data
+      // either deny= or allow=
+      if (nextUrl) {
+        res.statusCode = 303;
+        res.setHeader('Location', nextUrl);
+        res.end();
+        return;
+      }
+
+      res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      res.write(JSON.stringify({ success: true }));
+      //res.setHeader('Content-Type', 'application/json; charset=utf-8');
+      //res.wirte(JSON.stringify({ nextUrl: nextUrl }));
       res.end();
     });
 
@@ -181,6 +204,7 @@
     var sess = req.session;
     if (sess.views) {
       res.setHeader('Content-Type', 'text/html');
+      res.write('<p>user: ' + sess.user + '</p>');
       res.write('<p>views: ' + sess.views + '</p>');
       res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>');
       res.end();
@@ -201,7 +225,7 @@
     .use(connect.urlencoded())
     .use(connect.query())
     .use(connect.cookieParser('keyboard cat'))
-    .use(connect.session({ cookie: { maxAge: 60000 }}))
+    .use(connect.session({ cookie: { maxAge: 120 * 1000 }}))
     //.use(connect.session({store: new MemoryStore({reapInterval: 5 * 60 * 1000}), secret: 'abracadabra'}))
     .use(myOAP.oauth())
     .use(myOAP.login())

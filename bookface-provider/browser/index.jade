@@ -9,9 +9,16 @@ html
     h1 Welcome to Bookface Provider!
     p Bookface is an OAuth provider in the same way that Facebook is an OAuth provider.
     p Unlike Facebook, however, it doesn't do anything else.
-    div.js-login
+    div.js-login(style="display: none;")
       form(method="post", action="/login")
         input(type="hidden", name="next", value="#BUG.next_url")
         input(type="text", placeholder="username", name="username")
         input(type="password", placeholder="password", name="password")
         button(type="submit") Login
+    div.js-oauth(style="display: none;")
+      p
+        span.js-client-id client_id
+        span wants to use WebApps Center to install applications.
+      form(method="post", action="#authorize_url")
+        button(name="allow") Allow
+        button(name="deny") Deny
