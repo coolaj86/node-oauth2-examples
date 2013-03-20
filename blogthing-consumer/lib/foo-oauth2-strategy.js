@@ -1,4 +1,3 @@
-/*jshint strict:true node:true es5:true onevar:true laxcomma:true laxbreak:true*/
 /*!
  * Copyright(c) 2010 Ciaran Jessup <ciaranj@gmail.com>
  * MIT Licensed
@@ -8,7 +7,6 @@
 
   var OAuth = require("oauth").OAuth2
     , url = require("url")
-    , http = require('http')
     ;
 
   module.exports = function (options, server) {
@@ -79,13 +77,12 @@
       console.log(my._redirectUri);
 
       function verifyAuthSuccess(error, data, response) {
-        console.log('verifyAuthSuccess:');
         if (error) {
-          console.error(error);
+          console.errror('[ERR]', 'verifyAuthSuccess:', error);
         } else if (data) {
-          console.log(data);
+          console.log('verifyAuthSuccess:', JSON.stringify(data), !!response);
         } else {
-          console.log('dripping in lamesauce...');
+          console.log('supposedly unreachable code: dripping in lamesauce...');
         }
 
         /*
@@ -112,7 +109,8 @@
         }
 
         my._oAuth.getProtectedResource(
-            "https://github.com/api/v2/json/user/show"
+            "http://localhost:4455/secret"
+            //"https://github.com/api/v2/json/user/show"
           , request.session.access_token
           , verifyAuthSuccess
         );

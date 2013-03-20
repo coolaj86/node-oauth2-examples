@@ -44,5 +44,5 @@ module.exports = function (grunt) {
   //grunt.loadTasks('grunt-tasks/');
   grunt.registerTask('make', ["jade:dist", "less:dist", "pakmanager:browser"]);
   grunt.registerTask('build', ["jade:dev", "less:dev", "pakmanager:browser"]);
-  grunt.registerTask('default', ['develop','watch']);
+  grunt.registerTask('default', ['build', 'develop','watch']);
 };

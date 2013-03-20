@@ -33,6 +33,8 @@
 
   // before showing authorization page, make sure the user is logged in
   myOAP.on('enforce_login', function(req, res, authorize_url, next) {
+    console.log('[enforce_login] session:', req.session);
+    console.log('[enforce_login] user:', req.session.user);
     if(req.session.user) {
       next(req.session.user);
       return;
@@ -114,6 +116,7 @@
     var TOKEN_TTL = 10 * 60 * 1000; // 10 minutes
 
     if(token.grant_date.getTime() + TOKEN_TTL > Date.now()) {
+      console.log(token.user_id);
       req.session.user = token.user_id;
       req.session.data = token.extra_data;
     } else {

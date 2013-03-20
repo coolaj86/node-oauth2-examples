@@ -5,11 +5,24 @@
     ;
 
   function run() {
-    $('body').delegate('click', 'a[href="login"]', function (ev) {
+    $('body').on('click', '.js-login a', function (ev) {
+      var win
+        ;
+
       ev.preventDefault();
       ev.stopPropagation();
-      
-      console.log('attempted click');
+
+      window.oauthCallback = function () {
+        console.log('oauth callback complete');
+        win.close();
+        window.oauthCallback = null;
+      };
+
+      win = window.open(
+          '/login?oauthCallback=oauthCallback'
+        , 'oauthLogin'
+        , 'width=300,height=300,location=no'
+      );
     });
   }
 

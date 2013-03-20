@@ -6,7 +6,13 @@
   "bin": {
     "bookface-provider": "bin/provider.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "oauth2-provider": "~1.0.1"
+  },
+  "peerDependencies": {
+    "connect": "~2.3.0",
+    "connect_router": "~1.8.6"
+  },
   "devDependencies": {
     "grunt-contrib-watch": "~0.3.1",
     "grunt-contrib-jade": "~0.5.0",

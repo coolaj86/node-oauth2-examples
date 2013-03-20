@@ -2,6 +2,7 @@
   "use strict";
 
   var connect = require('connect')
+    , path = require('path')
     , fooStrategy = require('./foo-oauth2-strategy')
     , auth = require('connect-auth')
     , authOptions
@@ -12,6 +13,8 @@
   // GET http://localhost:7788/login
   function fooAuth(req, res, next) {
     console.log('looking at /login');
+    console.log('oauthCallback', req.query.oauthCallback);
+    req.session.oauthCallback = req.query.oauthCallback;
 
     function logAuthentication(error, authenticated) {
       if (error) {
@@ -40,33 +43,27 @@
     res.end();
   }
 
-  function homeRoute(req, res) {
+  function statusRoute(req, res) {
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.write(JSON.stringify(req.getAuthDetails().user));
+    res.end();
+  }
+
+  function oauthCallbackRoute(req, res) {
     console.log('looking at /', req.url);
     res.writeHead(200, {'Content-Type': 'text/html'});
 
+    // What the L happens to the session here?
+    console.log('oauthCallback', req.session.oauthCallback);
     if (req.isAuthenticated()) {
       res.write(
-          '<html>'
-        + '<body style="background-color: #EEEEFF;">'
-        + 'Authenticated: ' + JSON.stringify(req.getAuthDetails().user)
-        + '<br>'
-        + '<a href="/login">Login with Foo</a>'
-        + '<a href="/logout">Logout from Foo</a>'
+          '<html><head>'
+        + '<script>window.opener.' + req.session.oauthCallback + '()</script>'
+        + '</head></html>'
       );
       res.end();
       return;
     }
-
-    res.write(
-        '<html>'
-      + '<body style="background-color: #EEEEFF;">'
-      + 'Login using <a href="#login" '
-        + 'onclick="window.open(\'/login\', \'oauthLogin\', '
-        + '\'width=300,height=300,location=no\'); return false;'
-      + '">provider</a>?'
-      + '</body></html>'
-    );
-    res.end();
   }
 
   function redirectOnLogout(redirectUrl) {
@@ -104,15 +101,18 @@
 
   // XXX TODO getProtectedResource /secret
   app = connect()
+    .use(connect.static(path.join(__dirname, 'public')))
     .use(connect.favicon())
     .use(connect.cookieParser("keybored dog"))
     .use(connect.session())
+    .use(connect.query())
     .use(connect.json())
     .use(connect.urlencoded())
     .use(auth(authOptions))
     .use("/login", fooAuth)
-    .use('/logout', logoutRoute)      
-    .use("/", homeRoute)
+    .use("/logout", logoutRoute)      
+    .use("/status", statusRoute)
+    .use("/auth/fooauth_callback", oauthCallbackRoute)
   ;
 
   module.exports = app;

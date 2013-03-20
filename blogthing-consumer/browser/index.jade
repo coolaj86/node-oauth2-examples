@@ -4,12 +4,18 @@ html
     title Blogthing Consumer
     link(rel="stylesheet", href="style.css")
     script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js")
+    script
+      if (/^#?close/.test(location.hash)) {
+        window.opener.oauthWindow.close()
+      }
     script(src='pakmanaged.js')
   body
     h1 Welcome to Blogthing Consumer!
     p Blogthing is an OAuth consumer in the same way that Disqus is an OAuth consumer.
     p Unlike Disqus, however, it doesn't do anything else.
     div.js-login
-      a(href="#login") Login with Bookface Provider?
+      a(href="#login") Login with Bookface Provider
+      span ?
     div.js-logout
-      a(href="#logout") Logout of (all of) Bookface rovider?
+      a(href="#logout") Logout of Blogthing Consumer
+      span ?
