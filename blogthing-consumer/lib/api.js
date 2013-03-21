@@ -8,8 +8,10 @@
     , authOptions
     , fooStrategyOptions
     , app
-    , consumerHost = "consumer.example.net:7788"
-    , providerHost = "provider.example.com:4455"
+    //, consumerHost = "consumer.example.net:7788"
+    //, providerHost = "provider.example.com:4455"
+    , consumerHost = "localhost:7788"
+    , providerHost = "localhost:4455"
     ;
 
   // GET /login
@@ -85,15 +87,17 @@
 
     res.write(
         '<html><head>'
-      + '<script>console.log("req.session.oauthCallback:", "' + req.session.oauthCallback + '");'
+      + '<script>'
+      + 'var timeout = setTimeout(function () { document.write("<br/>ERROR")}, 20);'
+      + 'console.log("req.session.oauthCallback:", "' + req.session.oauthCallback + '");'
         + 'window.opener.'
         + req.session.oauthCallback + '('
         + JSON.stringify(req.isAuthenticated())
-        + '); console.log("Probably debugging, see other window\'s console");</script>'
+        + ');'
+      + 'clearTimeout(timeout); setTimeout(function () { document.write("<br/>DEBUG")}, 20);'
+      + '</script>'
       + '</head><body>' 
-      + 'This window would normally close automatically.'
-      + ' It is left open when debug mode is on and when there is an error.'
-      + ' Please see the console to find out which it is.'
+      + 'You should not see this message except in the case of debugging or an error.'
       + '</body></html>'
     );
     res.end();
