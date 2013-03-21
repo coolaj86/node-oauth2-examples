@@ -6,7 +6,11 @@ NodeJS OAuth2 Example
     npm install -g grunt-cli
     npm install
 
-There are two servers: `provider` and `consumer`. Both can be run simultaneously by running the demo.
+There are two servers: `provider` and `consumer`.
+
+For running this demo on `localhost` you should edit `/etc/hosts` and use something like
+`provider.example.com` and `consumer.example.net` as aliases of `127.0.0.1`.
+Currently there's a bug that I don't understand that prevents the demo from working on localhost.
 
 Bookface (Provider)
 
