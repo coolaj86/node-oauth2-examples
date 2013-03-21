@@ -64,7 +64,8 @@
     that.authenticate = function (request, response, callback) {
       //todo: makw the call timeout ....
 
-      console.log('[inFoo] ' + 'looking at that.authenticate', request.originalUrl, request.url);
+      console.log('[inFoo] looking at that.authenticate', request.originalUrl, request.url);
+      console.log('[inFoo] request.session.oauthCallback', request.session.oauthCallback);
 
       var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
         , host = request.headers.host
