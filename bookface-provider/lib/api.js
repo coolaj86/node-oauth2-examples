@@ -19,6 +19,7 @@
   if (!connect.router) {
     connect.router = require('connect_router');
   }
+  // this must get called after connect.router is added back
   OAuth2Provider = require('oauth2-provider').OAuth2Provider;
 
   // hardcoded list of <client id, client secret> tuples
@@ -33,14 +34,14 @@
 
   // before showing authorization page, make sure the user is logged in
   myOAP.on('enforce_login', function(req, res, authorize_url, next) {
-    console.log('[enforce_login] session:', req.session);
+    //console.log('[enforce_login] session:', req.session);
     console.log('[enforce_login] user:', req.session.user);
     if(req.session.user) {
       next(req.session.user);
       return;
     }
 
-    console.log('enforce_login:', authorize_url);
+    //console.log('enforce_login:', authorize_url);
     req.session.nextUrl = authorize_url;
     res.writeHead(303, { Location: '/#login' });
     //res.writeHead(303, { Location: '/#login?next=' + encodeURIComponent(authorize_url) });
@@ -49,19 +50,28 @@
 
   // render the authorize form with the submission URL
   // use two submit buttons named "allow" and "deny" for the user's choice
+  // those values are hard-coded somewhere
   myOAP.on('authorize_form', function(req, res, client_id, authorize_url) {
     var urlObj
       ;
 
-    console.log('has scope?', req.url);
+    //console.log('has scope?', req.url);
     urlObj = url.parse(req.url, true);
 
     req.session.nextUrl = authorize_url;
+
+    res.statusCode = 303;
+    res.setHeader('Location', '/#authorize'
+      + '?clientId=' + client_id
+      + '&authorizeUrl=' + encodeURIComponent(authorize_url)
+    );
+    /*
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.write(JSON.stringify({
         clientId: client_id
       , authorizeUrl: authorize_url
     }));
+    */
     res.end();
   });
 

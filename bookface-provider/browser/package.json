@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "browserDependencies": {
+    "url": "~0.7.9"
   },
   "repository": "",
   "author": "",

@@ -8,5 +8,7 @@
   },
   "repository": "",
   "author": "",
-  "license": "Apache2"
+  "license": "Apache2",
+  "dependencies": {
+  }
 }

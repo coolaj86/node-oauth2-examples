@@ -61,7 +61,7 @@
       //next();
     }
 
-    req.authenticate(['foo'], { scope: ["email", "birthday"] }, logAuthentication);
+    req.authenticate(['foo'], { foo: { scope: ["email", "birthday"] } }, logAuthentication);
   }
 
   function logoutRoute(req, res) {

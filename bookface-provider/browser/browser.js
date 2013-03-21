@@ -2,6 +2,7 @@
   "use strict";
 
   var $ = require('jQuery')
+    , url = require('url')
     //, request = require('./anr')
     ;
 
@@ -53,7 +54,8 @@
     $('.js-login').show();
 
     $('body').on('submit', '.js-login form', function (ev) {
-      console.log('attempted submit');
+      console.log('attempted submit', ev);
+      /*
       ev.preventDefault();
       ev.stopPropagation();
       
@@ -73,6 +75,7 @@
           }
         , error: function () { console.log(arguments); }
       });
+      */
     });
   }
 
@@ -95,10 +98,24 @@
   }
 
   function run() {
+    var data
+      , query
+      ;
+
     if (/^#?login/.test(location.hash)) {
       setupLogin();
     }
-    checkLoginStatus();
+    else if (/^#?authorize/.test(location.hash)) {
+      query = location.hash.replace(/[^?]*/, '');
+      console.log('query', query);
+      data = url.parse('/' + query, true);
+      console.log('data', data);
+      setupOauth(data.query);
+      location.hash = 'authorize';
+    }
+    else {
+      checkLoginStatus();
+    }
   }
 
   $(run);
