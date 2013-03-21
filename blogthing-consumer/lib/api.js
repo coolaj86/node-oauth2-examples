@@ -12,8 +12,8 @@
 
   // GET http://localhost:7788/login
   function fooAuth(req, res, next) {
-    console.log('[fooAuth] oauthCallback=', req.query.oauthCallback);
     req.session.oauthCallback = req.query.oauthCallback;
+    console.log('[fooAuth] oauthCallback=', req.query.oauthCallback);
 
     function logAuthentication(error, authenticated) {
       if (error) {
@@ -113,7 +113,7 @@
     .use(connect.urlencoded())
     .use(auth(authOptions))
     .use("/login", fooAuth)
-    .use("/logout", logoutRoute)      
+    .use("/logout", logoutRoute)
     .use("/status", statusRoute)
     .use("/auth/fooauth_callback", oauthCallbackRoute)
   ;
