@@ -3,6 +3,8 @@
   "name": "oauth2-example",
   "version": "0.1.0",
   "dependencies": {
+    "connect_router": "~1.8.7",
+    "connect": "~2.7.3"
   },
   "devDependencies": {},
   "bin": {
@@ -12,7 +14,7 @@
     "registry": "https://registry.npmjs.org"
   },
   "scripts": {
-    "prepublish": "node deploy"
+    "postinstall": "pushd bookface-provider && npm install && grunt build; popd; pushd blogthing-consumer && npm install && grunt build"
   },
   "optionalDependencies": {},
   "engines": {
