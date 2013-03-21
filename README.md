@@ -3,9 +3,16 @@ NodeJS OAuth2 Example
 
     git clone git://github.com/coolaj86/node-oauth2-examples.git
     pushd node-oauth2-examples
+    npm install
 
 There are two servers: `provider` and `consumer`. Both can be run simultaneously by running the demo.
 
+    pushd bookface-provider/
+    npm install
+    popd
+    pushd blogthing-consumer/
+    npm install
+    popd
     node bin/demo
 
 A provider is a service like facebook, twitter, google+, or github that handles the details of authentication.
