@@ -3,28 +3,35 @@ NodeJS OAuth2 Example
 
     git clone git://github.com/coolaj86/node-oauth2-examples.git
     pushd node-oauth2-examples
+    npm install -g grunt-cli
     npm install
 
 There are two servers: `provider` and `consumer`. Both can be run simultaneously by running the demo.
 
+Bookface (Provider)
+
     pushd bookface-provider/
     npm install
+    grunt build
     popd
-    
+    node bookface-provider/bin/provider
+
+Blogthing (Consumer)
+
     pushd blogthing-consumer/
     npm install
+    grunt build
     popd
-    
+    node blogthing-consumer/bin/consumer
+
+Demo (runs both)
+
     node bin/demo
+
+## Provider (Bookface)
 
 A provider is a service like facebook, twitter, google+, or github that handles the details of authentication.
 
-You can run the provider on it's own like so:
-
-    pushd bookface-provider/
-    npm install
-    node bin/provider
-    # uses oauth2-provider
 
 API
 
@@ -32,15 +39,9 @@ API
   * http://localhost:4455/logout
   * http://localhost:4455/secret
 
+## Consumer (Blogthing)
+
 The consumer is a service such as Disqus, Spotify, EverNote, BlissControl, IfThisThenThat, or Calepin
-
-You can run the consumer on it's own like so:
-
-    pushd blogthing-consumer/
-    npm install
-    node bin/consumer
-    # uses foo-oauth2-strategy.js
-    # uses connect-auth and node-oauth
     
 API
 
