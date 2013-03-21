@@ -50,6 +50,8 @@ The consumer is a service such as Disqus, Spotify, EverNote, BlissControl, IfThi
 API
 
   * http://localhost:7788/login
+  * http://localhost:4455/logout
+  * http://localhost:4455/secret
 
 Process
 ---
