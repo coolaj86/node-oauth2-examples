@@ -15,7 +15,11 @@
       window.oauthCallback = function (isAuth) {
         console.log('oauth callback complete');
         console.log('req.isAuthenticated()', isAuth);
-        win.close();
+        if (true) {
+          console.log('[DEBUG] window left open on purpose');
+        } else {
+          win.close();
+        }
         window.oauthCallback = null;
       };
 

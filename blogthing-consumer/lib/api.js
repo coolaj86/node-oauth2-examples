@@ -31,12 +31,23 @@
         return;
       }
 
-      if (undefined === authenticated) {
+      console.log('authenticated', authenticated);
+      if (!req.isAuthenticated()) {
+        if (undefined === authenticated) {
+          console.log("[fooAuth] Haven't tried to authenticate before");
+        } else {
+          console.log("[fooAuth] The user denied the authentication last time");
+        }
         // The authentication strategy requires some more browser interaction, suggest you do nothing here!
         console.log('[fooAuth] Waiting for browser interaction...');
         console.log('[fooAuth] Auth status:', req.isAuthenticated());
         console.log('[fooAuth] oauthCallback=', req.session.oauthCallback);
-        return;
+
+        if (undefined === authenticated) {
+          return;
+        } else {
+          next();
+        }
       }
 
       // We've either failed to authenticate, or succeeded
@@ -78,8 +89,12 @@
         + 'window.opener.'
         + req.session.oauthCallback + '('
         + JSON.stringify(req.isAuthenticated())
-        + ')</script>'
-      + '</head><body>If the session were preserved, you wouldn\'t see this window.</body></html>'
+        + '); console.log("Probably debugging, see other window\'s console");</script>'
+      + '</head><body>' 
+      + 'This window would normally close automatically.'
+      + ' It is left open when debug mode is on and when there is an error.'
+      + ' Please see the console to find out which it is.'
+      + '</body></html>'
     );
     res.end();
   }
