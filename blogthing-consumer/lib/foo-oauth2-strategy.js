@@ -25,7 +25,7 @@
     //options.callback = authCallback;
     //callbackUrlObj = url.parse(options.callback);
     //authCallback = callbackUrlObj.pathname;
-    console.log(authCallback);
+    //console.log('[inFoo] ' + authCallback);
 
     // Give the strategy a name
     that.name = moduleName;
@@ -34,7 +34,7 @@
     that.setupRoutes = function (app) {
       app.use(authCallback, function (req, res) {
         req.authenticate([that.name], function (error, authenticated) {
-          console.log('req.session.sessionRedirectUrl', req.session.sessionRedirectUrl);
+          console.log('[inFoo] ' + 'req.session.sessionRedirectUrl', req.session.sessionRedirectUrl);
           res.writeHead(303, {
             'Location': req.session.sessionRedirectUrl
           });
@@ -64,7 +64,7 @@
     that.authenticate = function (request, response, callback) {
       //todo: makw the call timeout ....
 
-      console.log('looking at that.authenticate', request.originalUrl, request.url);
+      console.log('[inFoo] ' + 'looking at that.authenticate', request.originalUrl, request.url);
 
       var protocol = 'http' + (request.connection.encrypted ? 's' : '') + '://'
         , host = request.headers.host
@@ -74,15 +74,15 @@
         ;
 
       my._redirectUri = protocol + host + authCallback;
-      console.log(my._redirectUri);
+      console.log('[inFoo] ' + my._redirectUri);
 
       function verifyAuthSuccess(error, data, response) {
         if (error) {
           console.errror('[ERR]', 'verifyAuthSuccess:', error);
         } else if (data) {
-          console.log('verifyAuthSuccess:', JSON.stringify(data), !!response);
+          console.log('[inFoo] ' + 'verifyAuthSuccess:', JSON.stringify(data), !!response);
         } else {
-          console.log('supposedly unreachable code: dripping in lamesauce...');
+          console.log('[inFoo] ' + 'supposedly unreachable code: dripping in lamesauce...');
         }
 
         /*
@@ -146,14 +146,14 @@
         return;
       }
 
-      console.log('assigning req.session.sessionRedirectUrl', request.originalUrl);
+      console.log('[inFoo] ' + 'assigning req.session.sessionRedirectUrl', request.originalUrl);
       request.session.sessionRedirectUrl = request.originalUrl;
 
       redirectUrl = my._oAuth.getAuthorizeUrl({
         redirect_uri: my._redirectUri,
         scope: my.scope
       });
-      console.log('getAuthorizeUrl', redirectUrl);
+      console.log('[inFoo] ' + 'getAuthorizeUrl', redirectUrl);
 
       self.redirect(response, redirectUrl, callback);
     };
