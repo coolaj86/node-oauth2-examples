@@ -12,8 +12,9 @@
       ev.preventDefault();
       ev.stopPropagation();
 
-      window.oauthCallback = function () {
+      window.oauthCallback = function (isAuth) {
         console.log('oauth callback complete');
+        console.log('req.isAuthenticated()', isAuth);
         win.close();
         window.oauthCallback = null;
       };

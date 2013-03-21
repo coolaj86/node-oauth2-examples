@@ -12,8 +12,7 @@
 
   // GET http://localhost:7788/login
   function fooAuth(req, res, next) {
-    console.log('looking at /login');
-    console.log('oauthCallback', req.query.oauthCallback);
+    console.log('[fooAuth] oauthCallback=', req.query.oauthCallback);
     req.session.oauthCallback = req.query.oauthCallback;
 
     function logAuthentication(error, authenticated) {
@@ -26,7 +25,7 @@
 
       if (undefined === authenticated) {
         // The authentication strategy requires some more browser interaction, suggest you do nothing here!
-        console.log('stuck in the weird state?');
+        console.log('[fooAuth] Waiting for browser interaction...');
         return;
       }
 
@@ -54,16 +53,20 @@
     res.writeHead(200, {'Content-Type': 'text/html'});
 
     // What the L happens to the session here?
-    console.log('oauthCallback', req.session.oauthCallback);
-    if (req.isAuthenticated()) {
-      res.write(
-          '<html><head>'
-        + '<script>window.opener.' + req.session.oauthCallback + '()</script>'
-        + '</head></html>'
-      );
-      res.end();
-      return;
+    console.log('[oauthCallback] oauthCallback=', req.session.oauthCallback);
+    if (!req.session.oauthCallback) {
+      console.error('Lost the session! oauthCallback was defined, but is no longer');
     }
+
+    res.write(
+        '<html><head>'
+      + '<script>window.opener.'
+        + req.session.oauthCallback + '('
+        + JSON.stringify(req.isAuthenticated())
+        + ')</script>'
+      + '</head></html>'
+    );
+    res.end();
   }
 
   function redirectOnLogout(redirectUrl) {
