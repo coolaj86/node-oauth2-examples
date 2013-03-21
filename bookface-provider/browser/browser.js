@@ -76,10 +76,29 @@
     });
   }
 
+  function checkLoginStatus() {
+    $.ajax({
+        url: '/status'
+      , type: 'GET'
+      , success: function (data) {
+          console.log(data);
+          if (data.loggedIn) {
+            $('.js-login').hide();
+            $('.js-meat').show();
+          } else {
+            setupLogin();
+            $('.js-meat').hide();
+          }
+        }
+      , error: function () { console.log(arguments); }
+    });
+  }
+
   function run() {
     if (/^#?login/.test(location.hash)) {
       setupLogin();
     }
+    checkLoginStatus();
   }
 
   $(run);
