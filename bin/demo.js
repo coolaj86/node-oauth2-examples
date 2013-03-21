@@ -17,14 +17,14 @@
       var addr = providerServer.address()
         ;
 
-      console.log("Provider listening on http://%s:%d", addr.address, addr.port);
+      console.log("Open your browser to Bookface Provider at http://%s:%d", addr.address, addr.port);
     }
 
     function onConsumerListening() {
       var addr = consumerServer.address()
         ;
 
-      console.log("Consumer listening on http://%s:%d", addr.address, addr.port);
+      console.log("Open your browser to Blogthing Consumer at http://%s:%d", addr.address, addr.port);
     }
 
     providerServer = appProvider.listen(providerPort, onProviderListening);

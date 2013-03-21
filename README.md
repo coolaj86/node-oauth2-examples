@@ -43,7 +43,7 @@ Terminology
 
 The provider is an application platform such as Facebook, Google, and Twitter.
 
-The consumer is an application registered with the platform such as TweetDeck.
+The consumer is an application registered with the platform such as StackOverflow or TweetDeck.
 
 ### RESTful resources
 
