@@ -8,10 +8,10 @@
     , authOptions
     , fooStrategyOptions
     , app
-    //, consumerHost = "consumer.example.net:7788"
-    //, providerHost = "provider.example.com:4455"
-    , consumerHost = "localhost:7788"
-    , providerHost = "localhost:4455"
+    , consumerHost = "consumer.example.net:7788"
+    , providerHost = "provider.example.com:4455"
+    //, consumerHost = "localhost:7788"
+    //, providerHost = "localhost:4455"
     ;
 
   // GET /login
