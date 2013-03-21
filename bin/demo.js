@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-/*jshint node:true laxcomma:true*/
 (function () {
   "use strict";
 
   var providerPort = process.argv[2] || 4455
-    , consumerPort = process.argv[3] || 0
-    , appProvider = require('../server').provider
-    , appConsumer = require('../server').consumer
+    , consumerPort = process.argv[3] || 7788
+    , appProvider = require('../bookface-provider')
+    , appConsumer = require('../blogthing-consumer')
     ;
 
   function run() {
