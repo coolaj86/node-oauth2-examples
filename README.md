@@ -10,9 +10,11 @@ There are two servers: `provider` and `consumer`. Both can be run simultaneously
     pushd bookface-provider/
     npm install
     popd
+    
     pushd blogthing-consumer/
     npm install
     popd
+    
     node bin/demo
 
 A provider is a service like facebook, twitter, google+, or github that handles the details of authentication.
@@ -23,9 +25,12 @@ You can run the provider on it's own like so:
     npm install
     node bin/provider
     # uses oauth2-provider
-    # http://localhost:4455/login
-    # http://localhost:4455/logout
-    # http://localhost:4455/secret
+
+API
+
+  * http://localhost:4455/login
+  * http://localhost:4455/logout
+  * http://localhost:4455/secret
 
 The consumer is a service such as Disqus, Spotify, EverNote, BlissControl, IfThisThenThat, or Calepin
 
@@ -36,7 +41,10 @@ You can run the consumer on it's own like so:
     node bin/consumer
     # uses foo-oauth2-strategy.js
     # uses connect-auth and node-oauth
-    # http://localhost:7788/login
+    
+API
+
+  * http://localhost:7788/login
 
 Process
 ---
