@@ -15,13 +15,18 @@
     var that = {}
       , my = {}
       , moduleName = options.name || 'foo'
+      , providerHost = options.host
       , authCallback = '/_oauth/_' + moduleName + '_callback'
       , sessionAuthFailed = moduleName + '_login_attempt_failed'
       , sessionRedirectUrl = moduleName + '_redirect_url'
       , callbackUrlObj
       ;
 
-    // http://localhost:7788/
+    if (!providerHost) {
+      throw new Error('fooStrategy requires an options.host, such as provider.example.com:4455');
+    }
+
+    // GET /
     //options.callback = authCallback;
     //callbackUrlObj = url.parse(options.callback);
     //authCallback = callbackUrlObj.pathname;
@@ -49,7 +54,7 @@
     my._oAuth = new OAuth(
         options.appId
       , options.appSecret
-      , "http://localhost:4455/"
+      , "http://" + providerHost + "/"
       //, "https://github.com/"
       , "oauth/authorize"
       //, "login/oauth/authorize"
@@ -110,7 +115,7 @@
         }
 
         my._oAuth.getProtectedResource(
-            "http://localhost:4455/secret"
+            "http://" + providerHost + "/secret"
             //"https://github.com/api/v2/json/user/show"
           , request.session.access_token
           , verifyAuthSuccess

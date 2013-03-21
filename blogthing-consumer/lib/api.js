@@ -8,9 +8,11 @@
     , authOptions
     , fooStrategyOptions
     , app
+    , consumerHost = "consumer.example.net:7788"
+    , providerHost = "provider.example.com:4455"
     ;
 
-  // GET http://localhost:7788/login
+  // GET /login
   function fooAuth(req, res, next) {
     // This is the name of the global function stored on the window object
     // that will be called to close the child window and pass back any objects
@@ -116,7 +118,8 @@
   fooStrategyOptions = {
       appId: "1" // 1
     , appSecret: "1secret" // 1secret
-    , callback: "http://localhost:7788/auth/fooauth_callback"  // http://yourtesthost.com/auth/github_callback
+    , callback: "http://" + consumerHost + "/auth/fooauth_callback"  // http://yourtesthost.com/auth/github_callback
+    , host: providerHost
   };
 
   authOptions = {
